@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block title %}Login - Recommendation System{%
+endblock %} {% block content %}
+<div class="auth-container">
+  <h2 class="mb-4 text-center">Login</h2>
+
+  {% if registered %}
+  <div class="alert alert-success" role="alert">
+    Registration successful! Please login with your credentials.
+  </div>
+  {% endif %} {% if request.query_params.get('error') == 'invalid_credentials'
+  %}
+  <div class="alert alert-danger" role="alert">
+    Invalid email or password. Please try again.
+  </div>
+  {% endif %}
+
+  <form method="post" action="/login">
+    <div class="mb-3">
+      <label for="email" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        required
+      />
+    </div>
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+  </form>
+
+  <div class="mt-3 text-center">
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+  </div>
+</div>
+{% endblock %}
