@@ -12,6 +12,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
@@ -28,18 +33,18 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Database configuration
+# Database configuration from environment variables
 DATABASE_CONFIG = {
-    'host': '192.168.0.110',
-    'user': 'root',
-    'password': 'admin',
-    'database': 'recsys'
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'database': os.getenv('DB_NAME', 'recsys')
 }
 
-# JWT Configuration
-SECRET_KEY = "YOUR_SECRET_KEY_HERE"  # Should be in env variables in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# JWT Configuration from environment variables
+SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'default_insecure_key')
+ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', '30'))
 
 # Dependency to get the database connection
 def get_db():
