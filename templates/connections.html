@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inter-link - Social Connections</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-bottom: 40px;
+      }
+      .navbar {
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .content-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .content-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .section-title {
+        color: #0d6efd;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 24px;
+        color: #0d6efd;
+      }
+      .user-list {
+        margin: 20px 0;
+      }
+      .user-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+      .user-item:hover {
+        background-color: #e9ecef;
+      }
+      .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 15px;
+        background-color: #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .user-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .user-info {
+        flex-grow: 1;
+      }
+      .user-name {
+        font-weight: 600;
+        margin-bottom: 0;
+        font-size: 1rem;
+      }
+      .user-stats {
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-top: 3px;
+      }
+      .action-btn {
+        margin-left: 10px;
+      }
+      .nav-tabs {
+        margin-bottom: 20px;
+      }
+      .page-header {
+        margin-bottom: 25px;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 30px;
+        color: #6c757d;
+      }
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container">
+        <a class="navbar-brand" href="/home">Inter-link</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">Log out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container content-container">
+      <div class="page-header">
+        <h2>Social Connections</h2>
+        <p class="text-muted">
+          Connect with others to discover new recommendations.
+        </p>
+      </div>
+
+      <ul class="nav nav-tabs" id="connectionsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="followers-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#followers"
+            type="button"
+            role="tab"
+            aria-controls="followers"
+            aria-selected="true"
+          >
+            Followers ({{ followers|length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="following-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#following"
+            type="button"
+            role="tab"
+            aria-controls="following"
+            aria-selected="false"
+          >
+            Following ({{ following|length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="suggestions-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#suggestions"
+            type="button"
+            role="tab"
+            aria-controls="suggestions"
+            aria-selected="false"
+          >
+            Suggestions ({{ suggestions|length }})
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="connectionsTabsContent">
+        <!-- Followers Tab -->
+        <div
+          class="tab-pane fade show active"
+          id="followers"
+          role="tabpanel"
+          aria-labelledby="followers-tab"
+        >
+          <div class="content-card">
+            <h4 class="section-title">People Following You</h4>
+
+            {% if followers %}
+            <div class="user-list">
+              {% for follower in followers %}
+              <div class="user-item">
+                <div class="user-avatar">
+                  <img
+                    src="https://via.placeholder.com/48"
+                    alt="{{ follower.name }}"
+                  />
+                </div>
+                <div class="user-info">
+                  <p class="user-name">{{ follower.name }}</p>
+                  <p class="user-stats">
+                    <span class="follow-count"
+                      >{{ follower.follower_count|default(0) }} followers</span
+                    >
+                    ·
+                    <span class="following-count"
+                      >{{ follower.following_count|default(0) }} following</span
+                    >
+                  </p>
+                </div>
+                {% if follower.is_following %}
+                <form action="/unfollow/{{ follower.uid }}" method="post">
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-danger action-btn"
+                  >
+                    Unfollow
+                  </button>
+                </form>
+                {% else %}
+                <form action="/follow/{{ follower.uid }}" method="post">
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-primary action-btn"
+                  >
+                    Follow Back
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+              <i class="bi bi-people"></i>
+              <p>
+                You don't have any followers yet. Start sharing your profile to
+                connect with others!
+              </p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Following Tab -->
+        <div
+          class="tab-pane fade"
+          id="following"
+          role="tabpanel"
+          aria-labelledby="following-tab"
+        >
+          <div class="content-card">
+            <h4 class="section-title">People You Follow</h4>
+
+            {% if following %}
+            <div class="user-list">
+              {% for follow in following %}
+              <div class="user-item">
+                <div class="user-avatar">
+                  <img
+                    src="https://via.placeholder.com/48"
+                    alt="{{ follow.name }}"
+                  />
+                </div>
+                <div class="user-info">
+                  <p class="user-name">{{ follow.name }}</p>
+                  <p class="user-stats">
+                    <span class="follow-count"
+                      >{{ follow.follower_count|default(0) }} followers</span
+                    >
+                    ·
+                    <span class="following-count"
+                      >{{ follow.following_count|default(0) }} following</span
+                    >
+                  </p>
+                </div>
+                <form action="/unfollow/{{ follow.uid }}" method="post">
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-danger action-btn"
+                  >
+                    Unfollow
+                  </button>
+                </form>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+              <i class="bi bi-person-plus"></i>
+              <p>
+                You aren't following anyone yet. Check out the suggestions to
+                find interesting people!
+              </p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Suggestions Tab -->
+        <div
+          class="tab-pane fade"
+          id="suggestions"
+          role="tabpanel"
+          aria-labelledby="suggestions-tab"
+        >
+          <div class="content-card">
+            <h4 class="section-title">Suggested Connections</h4>
+
+            {% if suggestions %}
+            <div class="user-list">
+              {% for suggestion in suggestions %}
+              <div class="user-item">
+                <div class="user-avatar">
+                  <img
+                    src="https://via.placeholder.com/48"
+                    alt="{{ suggestion.name }}"
+                  />
+                </div>
+                <div class="user-info">
+                  <p class="user-name">{{ suggestion.name }}</p>
+                  <p class="user-stats">
+                    <span class="follow-count"
+                      >{{ suggestion.follower_count|default(0) }}
+                      followers</span
+                    >
+                    ·
+                    <span class="following-count"
+                      >{{ suggestion.following_count|default(0) }}
+                      following</span
+                    >
+                  </p>
+                </div>
+                <form action="/follow/{{ suggestion.uid }}" method="post">
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-primary action-btn"
+                  >
+                    Follow
+                  </button>
+                </form>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+              <i class="bi bi-search"></i>
+              <p>No suggestions available at the moment. Check back later!</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

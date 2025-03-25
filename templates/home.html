@@ -1,98 +1,366 @@
-{% extends "base.html" %} {% block title %}Home - Recommendation System{%
-endblock %} {% block content %}
-<div class="container py-5">
-  <div class="row">
-    <div class="col-md-12 mb-4">
-      <div class="card">
-        <div class="card-body">
-          <h2 class="card-title">Welcome, {{ user.name }}!</h2>
-          <p class="card-text">
-            This is your personalized recommendation dashboard.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4 mb-4">
-      <div class="card h-100">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Movie Recommendations</h5>
-        </div>
-        <div class="card-body">
-          <p class="card-text">
-            Based on your preferences, we recommend these movies:
-          </p>
-          <ul class="list-group">
-            <li class="list-group-item">Coming soon...</li>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inter-link - Home</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-bottom: 40px;
+      }
+      .navbar {
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .content-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .section-title {
+        color: #0d6efd;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .recommendation-section {
+        margin-bottom: 30px;
+      }
+      .content-row {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 15px;
+      }
+      .content-item {
+        min-width: 200px;
+        margin-right: 15px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .content-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+      .content-info {
+        padding: 10px;
+        background-color: white;
+      }
+      .content-title {
+        font-weight: 500;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+      .content-meta {
+        font-size: 12px;
+        color: #6c757d;
+      }
+      .action-btn {
+        margin: 5px;
+      }
+      .no-preference-alert {
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .card-buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+      }
+      .welcome-section {
+        margin-bottom: 25px;
+      }
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 24px;
+        color: #0d6efd;
+      }
+      .social-list {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+      }
+      .user-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        margin-bottom: 5px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+      }
+      .user-item img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .user-info {
+        flex-grow: 1;
+      }
+      .user-name {
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+      .activity-footer {
+        margin-top: 20px;
+      }
+      .subheading {
+        font-size: 17px;
+        font-weight: 600;
+        color: #495057;
+        margin: 15px 0 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container">
+        <a class="navbar-brand" href="/home">Inter-link</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">Log out</a>
+            </li>
           </ul>
         </div>
-        <div class="card-footer">
-          <a href="#" class="btn btn-sm btn-outline-primary">See All</a>
+      </div>
+    </nav>
+
+    <div class="container home-container">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h2>Welcome, {{ user.name }}!</h2>
+        <p class="text-muted">
+          Discover new recommendations based on your preferences
+        </p>
+      </div>
+
+      <!-- Movie Recommendations -->
+      <div class="content-card recommendation-section">
+        <h3 class="section-title">Movie Recommendations</h3>
+
+        {% if has_movie_preferences %} {% if movie_recommendations %}
+        <div class="content-row">
+          {% for movie in movie_recommendations %}
+          <div class="content-item">
+            <div class="content-info">
+              <div class="content-title">{{ movie.MOVIE }}</div>
+              <div class="content-meta">
+                {{ movie.GENRE }} | {{ movie.LANGUAGE }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-preference-alert">
+          <p>No movie recommendations available based on your preferences.</p>
+        </div>
+        {% endif %} {% if has_movie_lang and not has_movie_gen %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all genres
+          because you only selected language preferences.
+        </div>
+        {% elif has_movie_gen and not has_movie_lang %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all languages
+          because you only selected genre preferences.
+        </div>
+        {% endif %} {% else %}
+        <div class="no-preference-alert">
+          <p>You haven't selected any movie preferences yet.</p>
+          <a href="/preferences" class="btn btn-primary">Manage Preferences</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Book Recommendations -->
+      <div class="content-card recommendation-section">
+        <h3 class="section-title">Book Recommendations</h3>
+
+        {% if has_book_preferences %} {% if book_recommendations %}
+        <div class="content-row">
+          {% for book in book_recommendations %}
+          <div class="content-item">
+            <div class="content-info">
+              <div class="content-title">{{ book.BOOK }}</div>
+              <div class="content-meta">
+                {{ book.GENRE }} | {{ book.LANGUAGE }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-preference-alert">
+          <p>No book recommendations available based on your preferences.</p>
+        </div>
+        {% endif %} {% if has_book_lang and not has_book_gen %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all genres
+          because you only selected language preferences.
+        </div>
+        {% elif has_book_gen and not has_book_lang %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all languages
+          because you only selected genre preferences.
+        </div>
+        {% endif %} {% else %}
+        <div class="no-preference-alert">
+          <p>You haven't selected any book preferences yet.</p>
+          <a href="/preferences" class="btn btn-primary">Manage Preferences</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- TV Show Recommendations -->
+      <div class="content-card recommendation-section">
+        <h3 class="section-title">TV Show Recommendations</h3>
+
+        {% if has_tvshow_preferences %} {% if tvshow_recommendations %}
+        <div class="content-row">
+          {% for tvshow in tvshow_recommendations %}
+          <div class="content-item">
+            <div class="content-info">
+              <div class="content-title">{{ tvshow.TVSHOW }}</div>
+              <div class="content-meta">
+                {{ tvshow.GENRE }} | {{ tvshow.LANGUAGE }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-preference-alert">
+          <p>No TV show recommendations available based on your preferences.</p>
+        </div>
+        {% endif %} {% if has_tvshow_lang and not has_tvshow_gen %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all genres
+          because you only selected language preferences.
+        </div>
+        {% elif has_tvshow_gen and not has_tvshow_lang %}
+        <div class="alert alert-info mt-3">
+          <strong>Note:</strong> These recommendations include all languages
+          because you only selected genre preferences.
+        </div>
+        {% endif %} {% else %}
+        <div class="no-preference-alert">
+          <p>You haven't selected any TV show preferences yet.</p>
+          <a href="/preferences" class="btn btn-primary">Manage Preferences</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="row">
+        <!-- Social Connections Card -->
+        <div class="col-md-6 mb-3">
+          <div class="content-card h-100">
+            <h3 class="section-title">Social Connections</h3>
+            <p>
+              Connect with friends and see their recommendations. Discover what
+              others are enjoying!
+            </p>
+
+            <!-- Social Connection Stats -->
+            <div class="row text-center my-4">
+              <div class="col-6">
+                <h5>{{ followers|length }}</h5>
+                <small class="text-muted">Followers</small>
+              </div>
+              <div class="col-6">
+                <h5>{{ following|length }}</h5>
+                <small class="text-muted">Following</small>
+              </div>
+            </div>
+
+            <div class="text-center mt-3">
+              <a href="/connections" class="btn btn-primary">Connect</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Activity Card -->
+        <div class="col-md-6 mb-3">
+          <div class="content-card h-100">
+            <h3 class="section-title">Your Activity</h3>
+            <p>
+              Track your recent activities and preferences. See what you've
+              watched, read, and manage your content preferences all in one
+              place.
+            </p>
+
+            <!-- Activity Statistics -->
+            <div class="row text-center my-4">
+              <div class="col-4">
+                <h5>{{ movies_watched|default(0) }}</h5>
+                <small class="text-muted">Movies</small>
+              </div>
+              <div class="col-4">
+                <h5>{{ books_read|default(0) }}</h5>
+                <small class="text-muted">Books</small>
+              </div>
+              <div class="col-4">
+                <h5>{{ tvshows_watched|default(0) }}</h5>
+                <small class="text-muted">TV Shows</small>
+              </div>
+            </div>
+
+            <div class="activity-footer">
+              <div class="card-buttons">
+                <a
+                  href="/manage-preferences"
+                  class="btn btn-outline-primary action-btn"
+                  >Manage Preferences</a
+                >
+                <a
+                  href="/manage-history"
+                  class="btn btn-outline-secondary action-btn"
+                  >Manage History</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4 mb-4">
-      <div class="card h-100">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0">Book Recommendations</h5>
-        </div>
-        <div class="card-body">
-          <p class="card-text">Books you might enjoy reading:</p>
-          <ul class="list-group">
-            <li class="list-group-item">Coming soon...</li>
-          </ul>
-        </div>
-        <div class="card-footer">
-          <a href="#" class="btn btn-sm btn-outline-success">See All</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 mb-4">
-      <div class="card h-100">
-        <div class="card-header bg-info text-white">
-          <h5 class="mb-0">TV Show Recommendations</h5>
-        </div>
-        <div class="card-body">
-          <p class="card-text">TV shows that match your interests:</p>
-          <ul class="list-group">
-            <li class="list-group-item">Coming soon...</li>
-          </ul>
-        </div>
-        <div class="card-footer">
-          <a href="#" class="btn btn-sm btn-outline-info">See All</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mt-4">
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header bg-warning">
-          <h5 class="mb-0">Your Activity</h5>
-        </div>
-        <div class="card-body">
-          <p>Track your recent activities and preferences.</p>
-          <a href="#" class="btn btn-warning">Manage Preferences</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header bg-secondary text-white">
-          <h5 class="mb-0">Social Connections</h5>
-        </div>
-        <div class="card-body">
-          <p>Connect with friends and see their recommendations.</p>
-          <a href="#" class="btn btn-secondary">Find Friends</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

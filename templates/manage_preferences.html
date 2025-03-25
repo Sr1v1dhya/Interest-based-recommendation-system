@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inter-link - Manage Preferences</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar {
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .preferences-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+      .tab-content {
+        padding-top: 20px;
+      }
+      .form-check {
+        margin: 10px 0;
+      }
+      .submit-btn {
+        margin-top: 20px;
+      }
+      .section-title {
+        margin-bottom: 20px;
+        color: #0d6efd;
+      }
+      .nav-tabs .nav-link {
+        font-weight: 500;
+      }
+      .preference-section {
+        margin-bottom: 30px;
+      }
+      .alert {
+        margin-top: 10px;
+      }
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 24px;
+        color: #0d6efd;
+      }
+      .page-title {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container">
+        <a class="navbar-brand" href="/home">Inter-link</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">Log out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="page-title">
+            <h2>Manage Your Preferences</h2>
+            <p class="text-muted">
+              Update your preferences to get more personalized recommendations
+            </p>
+          </div>
+
+          <div class="preferences-container">
+            <form id="preferencesForm" action="/save-preferences" method="post">
+              <ul class="nav nav-tabs" id="preferenceTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="movies-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#movies"
+                    type="button"
+                    role="tab"
+                    aria-controls="movies"
+                    aria-selected="true"
+                  >
+                    Movies
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="books-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#books"
+                    type="button"
+                    role="tab"
+                    aria-controls="books"
+                    aria-selected="false"
+                  >
+                    Books
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="tvshows-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tvshows"
+                    type="button"
+                    role="tab"
+                    aria-controls="tvshows"
+                    aria-selected="false"
+                  >
+                    TV Shows
+                  </button>
+                </li>
+              </ul>
+
+              <!-- Hidden inputs for empty selections -->
+              <input type="hidden" name="movie_languages" value="" />
+              <input type="hidden" name="movie_genres" value="" />
+              <input type="hidden" name="book_languages" value="" />
+              <input type="hidden" name="book_genres" value="" />
+              <input type="hidden" name="tvshow_languages" value="" />
+              <input type="hidden" name="tvshow_genres" value="" />
+
+              <div class="tab-content" id="preferenceTabsContent">
+                <!-- Movies Tab -->
+                <div
+                  class="tab-pane fade show active"
+                  id="movies"
+                  role="tabpanel"
+                  aria-labelledby="movies-tab"
+                >
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred Movie Languages</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for language in languages %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input movie-lang"
+                            type="checkbox"
+                            name="movie_languages"
+                            value="{{ language.LID }}"
+                            id="movie-lang-{{ language.LID }}"
+                            {%
+                            if
+                            language.LID
+                            in
+                            movie_lang_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="movie-lang-{{ language.LID }}"
+                          >
+                            {{ language.LANGUAGE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred Movie Genres</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for genre in genres %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input movie-genre"
+                            type="checkbox"
+                            name="movie_genres"
+                            value="{{ genre.GID }}"
+                            id="movie-genre-{{ genre.GID }}"
+                            {%
+                            if
+                            genre.GID
+                            in
+                            movie_genre_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="movie-genre-{{ genre.GID }}"
+                          >
+                            {{ genre.GENRE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="alert alert-warning">
+                    <strong>Note:</strong> If you only select languages without
+                    genres, you'll receive recommendations in those languages
+                    across all genres. Similarly, if you only select genres
+                    without languages, you'll receive recommendations in those
+                    genres across all languages.
+                  </div>
+
+                  <div class="d-flex justify-content-end mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      id="movies-next"
+                    >
+                      Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Books Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="books"
+                  role="tabpanel"
+                  aria-labelledby="books-tab"
+                >
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred Book Languages</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for language in languages %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input book-lang"
+                            type="checkbox"
+                            name="book_languages"
+                            value="{{ language.LID }}"
+                            id="book-lang-{{ language.LID }}"
+                            {%
+                            if
+                            language.LID
+                            in
+                            book_lang_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="book-lang-{{ language.LID }}"
+                          >
+                            {{ language.LANGUAGE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred Book Genres</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for genre in genres %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input book-genre"
+                            type="checkbox"
+                            name="book_genres"
+                            value="{{ genre.GID }}"
+                            id="book-genre-{{ genre.GID }}"
+                            {%
+                            if
+                            genre.GID
+                            in
+                            book_genre_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="book-genre-{{ genre.GID }}"
+                          >
+                            {{ genre.GENRE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="alert alert-warning">
+                    <strong>Note:</strong> If you only select languages without
+                    genres, you'll receive recommendations in those languages
+                    across all genres. Similarly, if you only select genres
+                    without languages, you'll receive recommendations in those
+                    genres across all languages.
+                  </div>
+
+                  <div class="d-flex justify-content-between mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      id="books-back"
+                    >
+                      <i class="bi bi-arrow-left"></i> Back
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      id="books-next"
+                    >
+                      Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- TV Shows Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="tvshows"
+                  role="tabpanel"
+                  aria-labelledby="tvshows-tab"
+                >
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred TV Show Languages</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for language in languages %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input tvshow-lang"
+                            type="checkbox"
+                            name="tvshow_languages"
+                            value="{{ language.LID }}"
+                            id="tvshow-lang-{{ language.LID }}"
+                            {%
+                            if
+                            language.LID
+                            in
+                            tvshow_lang_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="tvshow-lang-{{ language.LID }}"
+                          >
+                            {{ language.LANGUAGE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="preference-section">
+                    <h4 class="section-title">Preferred TV Show Genres</h4>
+                    <p class="preference-info">
+                      Select your preferences or skip this section if you're not
+                      interested.
+                    </p>
+                    <div class="row">
+                      {% for genre in genres %}
+                      <div class="col-md-4">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input tvshow-genre"
+                            type="checkbox"
+                            name="tvshow_genres"
+                            value="{{ genre.GID }}"
+                            id="tvshow-genre-{{ genre.GID }}"
+                            {%
+                            if
+                            genre.GID
+                            in
+                            tvshow_genre_prefs
+                            %}checked{%
+                            endif
+                            %}
+                          />
+                          <label
+                            class="form-check-label"
+                            for="tvshow-genre-{{ genre.GID }}"
+                          >
+                            {{ genre.GENRE }}
+                          </label>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="alert alert-warning">
+                    <strong>Note:</strong> If you only select languages without
+                    genres, you'll receive recommendations in those languages
+                    across all genres. Similarly, if you only select genres
+                    without languages, you'll receive recommendations in those
+                    genres across all languages.
+                  </div>
+
+                  <div class="d-flex justify-content-between mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      id="tvshows-back"
+                    >
+                      <i class="bi bi-arrow-left"></i> Back
+                    </button>
+                    <div>
+                      <a href="/home" class="btn btn-outline-secondary me-2"
+                        >Cancel</a
+                      >
+                      <button
+                        type="submit"
+                        class="btn btn-success"
+                        id="submit-btn"
+                      >
+                        <i class="bi bi-check-lg"></i> Update Preferences
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get tab elements
+        const movieTab = new bootstrap.Tab(
+          document.getElementById("movies-tab")
+        );
+        const booksTab = new bootstrap.Tab(
+          document.getElementById("books-tab")
+        );
+        const tvShowsTab = new bootstrap.Tab(
+          document.getElementById("tvshows-tab")
+        );
+
+        // Next button in Movies tab
+        document
+          .getElementById("movies-next")
+          .addEventListener("click", function () {
+            booksTab.show();
+          });
+
+        // Back and Next buttons in Books tab
+        document
+          .getElementById("books-back")
+          .addEventListener("click", function () {
+            movieTab.show();
+          });
+
+        document
+          .getElementById("books-next")
+          .addEventListener("click", function () {
+            tvShowsTab.show();
+          });
+
+        // Back button in TV Shows tab
+        document
+          .getElementById("tvshows-back")
+          .addEventListener("click", function () {
+            booksTab.show();
+          });
+
+        // Form submission handler
+        document
+          .getElementById("preferencesForm")
+          .addEventListener("submit", function (e) {
+            // Remove the hidden empty value inputs before submission
+            // to prevent duplicate/conflicting values
+            document.querySelectorAll('input[value=""]').forEach((input) => {
+              // Only remove hidden inputs with empty values
+              if (input.type === "hidden" && input.value === "") {
+                input.remove();
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>
